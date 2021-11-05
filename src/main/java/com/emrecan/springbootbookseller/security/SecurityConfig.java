@@ -1,9 +1,12 @@
 package com.emrecan.springbootbookseller.security;
 
+import com.emrecan.springbootbookseller.model.Role;
 import com.emrecan.springbootbookseller.security.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,6 +29,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity // this class is web security config class
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
+    @Value("${authentication.internal-api-key}")
+    private String internalApiKey;
+
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
@@ -42,10 +48,19 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/authentication/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/books").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/books/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/api/internal/**").hasRole(Role.SYSTEM_MANAGER.name())
                 .anyRequest().authenticated();
 
-        //jwt filter
-        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        //jwt filter > jwt > authentication
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(internalApiAuthenticationFilter(), JwtAuthorizationFilter.class);
+    }
+
+    @Bean
+    public InternalApiAuthenticationFilter internalApiAuthenticationFilter(){
+        return new InternalApiAuthenticationFilter(internalApiKey);
     }
 
     @Bean
