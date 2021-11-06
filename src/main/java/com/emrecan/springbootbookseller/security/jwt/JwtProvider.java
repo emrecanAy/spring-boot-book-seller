@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtProvider implements IJwtProvider{
 
-    @Value("app.jwt.secret")
+    @Value("${app.jwt.secret}")
     private String JWT_SECRET;
 
     @Value("${app.jwt.expiration-in-ms}")
@@ -71,7 +71,7 @@ public class JwtProvider implements IJwtProvider{
         if(username == null){
             return null;
         }
-        return new UsernamePasswordAuthenticationToken(null, authorities);
+        return new UsernamePasswordAuthenticationToken(userDetails,null, authorities);
     }
 
     @Override

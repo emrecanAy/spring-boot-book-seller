@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping("api/books")
+@RequestMapping("api/book")
 public class BooksController {
 
     @Autowired

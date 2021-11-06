@@ -27,8 +27,6 @@ Content-Type: application/json
     "username": "user",
     "password": "user"
 }
-
-token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJ1c2VySWQiOjEsImV4cCI6MTYzNTk2MjAwMH0.G353r3R44BGw0AKPW8eGKlY7-HT9qgQ5y_BjdvWi5hRAkpsZvHQsyYmVtKA2kCDBnuL7JCoUIbPDfeNH4zSc9A
 ```
 
 #### Make-Admin
@@ -37,4 +35,61 @@ token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJ1c2Vy
 PUT /api/internal/make-admin/admin HTTP/1.1
 Host: localhost:8080
 Authorization: Bearer InternalApiKey1234!
+```
+
+#### Save Book
+
+```
+POST /api/book HTTP/1.1
+Host: localhost:8080
+Authorization: Bearer ...admin
+Content-Type: application/json
+Content-Length: 118
+
+{
+    "title": "Test Book",
+    "price": 10,
+    "description": "Test description",
+    "author": "Test author"
+}
+```
+
+#### Delete Book
+
+
+```
+POST /api/book HTTP/1.1
+Host: localhost:8080
+Authorization: Bearer ...admin
+```
+
+#### Get All Books
+
+```
+GET /api/book HTTP/1.1
+Host: localhost:8080
+```
+
+#### Save Purchase
+
+```
+POST /api/purchase-histories HTTP/1.1
+Host: localhost:8080
+Authorization: Bearer ...user or admin
+Content-Type: application/json
+Content-Length: 57
+
+{
+    "userId": 3,
+    "bookId": 1,
+    "price": 10
+}
+```
+
+#### Get User Purchases
+
+```
+GET /api/purchase-histories HTTP/1.1
+Host: localhost:8080
+Authorization: Bearer ...user or admin
 ```
